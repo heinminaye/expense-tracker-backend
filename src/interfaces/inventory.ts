@@ -7,6 +7,7 @@ export interface IInventory {
   date_time: string;
   remark: string;
   user_id: string;
+  invoice: string;
   nrc: string;
   address: string;
   type: number;

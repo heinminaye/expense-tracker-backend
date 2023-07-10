@@ -135,11 +135,13 @@ export default class InventoryService {
           date_time: date_now,
           receiving_branch: branchCheck,
         };
-        
+
         var InventoryRecord: any;
-        await this.inventoryModel.services.create(inventoryData).then((data: any) => {
-          InventoryRecord = data;
-        });
+        await this.inventoryModel.services
+          .create(inventoryData)
+          .then((data: any) => {
+            InventoryRecord = data;
+          });
         var emit = {
           item_cash_id: item_cash_id,
           item_amount: IInventory.item_amount,
