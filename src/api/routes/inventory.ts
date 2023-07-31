@@ -20,7 +20,7 @@ var AddInventorySchema = Joi.object().keys({
   item_code: Joi.allow(""),
   cash_amount: Joi.number().required(),
   customer_name: Joi.string().required(),
-  nrc: Joi.string().allow(""),
+  nrc: Joi.allow(""),
   address: Joi.string().allow(""),
 });
 
@@ -31,7 +31,7 @@ var EditInventorySchema = Joi.object().keys({
   item_code: Joi.allow(""),
   cash_amount: Joi.number().allow(""),
   customer_name: Joi.string().allow(""),
-  nrc: Joi.string().allow(""),
+  nrc: Joi.allow(""),
   address: Joi.string().allow(""),
 });
 

@@ -34,12 +34,10 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       allowNull: false,
     },
     nrc: {
-      allowNull: true,
       type: Sequelize.STRING,
       default: null,
     },
     address: {
-      allowNull: true,
       type: Sequelize.STRING,
       default: null,
     },
