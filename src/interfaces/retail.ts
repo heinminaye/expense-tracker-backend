@@ -10,6 +10,7 @@ export interface IRetail {
     user_id: string;
     invoice: string;
     nrc: string;
+    phone: string;
     address: string;
     type: string;
     delete_cash_ids: []

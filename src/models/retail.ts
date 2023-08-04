@@ -41,6 +41,10 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       type: Sequelize.STRING,
       default: null,
     },
+    phone: {
+      type: Sequelize.STRING,
+      default: null,
+    },
     date_time: {
       type: Sequelize.STRING,
       allowNull: false,
