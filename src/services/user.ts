@@ -132,7 +132,7 @@ export default class UserService {
       var branchCheck: any;
       await this.branchModel.services
         .findAll({
-          where: { branch_id: IUser.branch },
+          where: { branch_id: "001" },
         })
         .then((data: any) => {
           if (data.length > 0) {
@@ -149,7 +149,7 @@ export default class UserService {
         const update = {
           user_name: IUser.user_name,
           role: IUser.role,
-          branch: IUser.branch,
+          branch: "001",
           password: encoded,
           is_deleted: "false",
         };
