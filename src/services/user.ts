@@ -107,6 +107,7 @@ export default class UserService {
         ...IUser,
         user_id: IUser.staff_id,
         password: encoded,
+        branch: "001"
       };
       var userCheck: any;
       await this.userModel.services
