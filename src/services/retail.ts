@@ -35,20 +35,20 @@ export default class RetailService {
         return { returncode, message };
       }
 
-      var branchCheck: any;
-      await this.branchModel.services
-        .findAll({ where: { branch_id: userRecord.branch } })
-        .then((data: any) => {
-          if (data.length > 0) {
-            branchCheck = data[0];
-          }
-        });
+      // var branchCheck: any;
+      // await this.branchModel.services
+      //   .findAll({ where: { branch_id: userRecord.branch } })
+      //   .then((data: any) => {
+      //     if (data.length > 0) {
+      //       branchCheck = data[0];
+      //     }
+      //   });
 
-      if (!branchCheck) {
-        const returncode = "300";
-        const message = "Branch Not Found";
-        return { returncode, message };
-      }
+      // if (!branchCheck) {
+      //   const returncode = "300";
+      //   const message = "Branch Not Found";
+      //   return { returncode, message };
+      // }
 
       var result: any;
       var queryOne = `SELECT * FROM retails LEFT JOIN users ON retails.user_id = users.user_id ORDER BY retails.date_time DESC;`;
