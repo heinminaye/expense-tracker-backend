@@ -17,7 +17,6 @@ var EditUserSchema = Joi.object().keys({
   staff_id: Joi.string().required(),
   user_name: Joi.string().allow(""),
   role: Joi.string().allow(""),
-  branch: Joi.string().required(),
   password: Joi.string().allow(""),
 });
 
