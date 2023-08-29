@@ -27,7 +27,6 @@ var AddUserSchema = Joi.object().keys({
   password: Joi.string().required(),
   user_name: Joi.string().required(),
   role: Joi.string().required(),
-  branch: Joi.string().required(),
 });
 
 var DeleteUserSchema = Joi.object().keys({
