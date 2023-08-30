@@ -7,7 +7,7 @@ require("./loaders").default({ expressApp: app });
 
 const port = process.env.PORT || 3030;
 var server = app
-  .listen(3030, "192.168.1.9", () => {
+  .listen(3030, "0.0.0.0", () => {
     console.log(`
     ------------------------------------------------
     ################################################
