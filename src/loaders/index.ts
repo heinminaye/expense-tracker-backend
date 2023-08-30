@@ -34,7 +34,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //       branchModel.model.services.create({
   //         branch_id: "001",
   //         branch_name: "Test",
-  //         branch_address: "MDY_001",
+  //         branch_address: "001",
   //       });
   //     }
   //   });
