@@ -25,6 +25,7 @@ var addRetailSchema = Joi.object().keys({
   phone: Joi.allow(""),
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
+  remark: Joi.allow("")
 });
 
 var EditRetailSchema = Joi.object().keys({
@@ -37,6 +38,7 @@ var EditRetailSchema = Joi.object().keys({
   phone: Joi.allow(""),
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
+  remark: Joi.allow("")
 });
 
 var deleteRetailSchema = Joi.object().keys({
