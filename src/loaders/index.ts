@@ -11,11 +11,6 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/user"),
   };
 
-  const branchModel = {
-    name: "branchModel",
-    model: require("../models/branch"),
-  };
-
   const inventoryModel = {
     name: "inventoryModel",
     model: require("../models/inventory"),
@@ -59,7 +54,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
 
   // Set Containers for Dependency Injection
   await dependencyInjectorLoader({
-    models: [userModel, branchModel, inventoryModel, retailModel],
+    models: [userModel, inventoryModel, retailModel],
   });
 
   await expressLoader({ app: expressApp });

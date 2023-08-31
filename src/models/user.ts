@@ -21,10 +21,6 @@ const userModel = (sequelize: any, Sequelize: any) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    branch:{
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
     is_deleted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
