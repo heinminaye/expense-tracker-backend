@@ -12,8 +12,7 @@ export default class RetailService {
   constructor(
     @Inject("userModel") private userModel: any,
     @Inject("retailModel") private retailModel: any,
-    @Inject("inventoryModel") private inventoryModel: any,
-    @Inject("branchModel") private branchModel: any
+    @Inject("inventoryModel") private inventoryModel: any
   ) {}
 
   public async GetRetails(
@@ -35,21 +34,6 @@ export default class RetailService {
         return { returncode, message };
       }
 
-      // var branchCheck: any;
-      // await this.branchModel.services
-      //   .findAll({ where: { branch_id: userRecord.branch } })
-      //   .then((data: any) => {
-      //     if (data.length > 0) {
-      //       branchCheck = data[0];
-      //     }
-      //   });
-
-      // if (!branchCheck) {
-      //   const returncode = "300";
-      //   const message = "Branch Not Found";
-      //   return { returncode, message };
-      // }
-
       var result: any;
       var queryOne = `SELECT * FROM retails LEFT JOIN users ON retails.user_id = users.user_id ORDER BY retails.date_time DESC;`;
       await sequelize.query(queryOne).then((data: any) => {
@@ -66,7 +50,6 @@ export default class RetailService {
               phone: item.phone,
               nrc: item.nrc,
               address: item.address,
-              receiving_branch: item.receiving_branch,
               date_time: item.date_time,
               user_name: item.user_name,
             };
@@ -111,46 +94,6 @@ export default class RetailService {
         const now = new Date();
         const item_cash_id = uuidv4();
         const date_now = dateFormat(now, "isoDateTime");
-        var branchCheck: any;
-        // var inventorySum: number = 0;
-        // var retailSum: number = 0;
-
-        // var queryInventorySum = `SELECT CAST(SUM(item_amount) as INTEGER) FROM inventories;`;
-        // await sequelize.query(queryInventorySum).then((data:any)=>{
-        //   if(data[0].length > 0){
-        //     inventorySum = data[0][0].sum;
-        //   }
-        //   else{
-        //     return{ returncode: "300", message: "Inventory No Data"};
-        //   }
-        // })
-
-        // var queryRetailSum = `SELECT CAST(SUM(item_amount) as INTEGER) FROM retails;`;
-        // await sequelize.query(queryRetailSum).then((data:any)=>{
-        //   if(data[0].length>0){
-        //     retailSum = data[0][0].sum;
-        //   }
-        // })
-        // var resSum = Number(inventorySum) - Number(retailSum);
-        // console.log(inventorySum)
-        // console.log(retailSum)
-        // if(IRetail.item_amount > resSum){
-        //   return{ returncode: "300", message: `More than available quantity`};
-        // }
-
-        var query = `SELECT * FROM branches RIGHT JOIN users ON branches.branch_id = users.branch WHERE users.user_id = '${adminuserCheck.user_id}'`;
-        await sequelize.query(query).then((data: any) => {
-          if (data[0].length > 0) {
-            branchCheck = data[0][0].branch_name;
-          } else {
-            result = { returncode: "300", message: "Branch Not Found" };
-          }
-        });
-        if (!branchCheck) {
-          const returncode = "300";
-          const message = "Branch Not Found";
-          result = { returncode, message };
-        }
 
         const getRandomId = (min = 0, max = 500000) => {
           min = Math.ceil(min);
@@ -167,8 +110,7 @@ export default class RetailService {
           ...IRetail,
           invoice: invoice,
           item_cash_id: item_cash_id,
-          date_time: date_now,
-          receiving_branch: branchCheck,
+          date_time: date_now
         };
 
         var RetailRecord: any;
@@ -186,7 +128,6 @@ export default class RetailService {
           invoice: invoice,
           nrc: RetailRecord.nrc,
           address: RetailRecord.address,
-          receiving_branch: branchCheck,
           date_time: date_now,
           user_name: adminuserCheck.user_name,
         };
@@ -268,7 +209,6 @@ export default class RetailService {
                 address: updateRetail[0].address,
                 customer_name: updateRetail[0].customer_name,
                 phone: updateRetail[0].phone,
-                receiving_branch: updateRetail[0].receiving_branch,
                 date_time: updateRetail[0].date_time,
                 user_name: retailCheck[0].user_name,
               };

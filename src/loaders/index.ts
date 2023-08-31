@@ -28,18 +28,6 @@ export default async ({ expressApp }: { expressApp: any }) => {
 
   // sequelize.sync({ alter: true });
 
-  // branchModel.model.sequelize.sync().then(function () {
-  //   branchModel.model.services.findAll({}).then((data: any) => {
-  //     if (data.length == 0) {
-  //       branchModel.model.services.create({
-  //         branch_id: "001",
-  //         branch_name: "Test",
-  //         branch_address: "001",
-  //       });
-  //     }
-  //   });
-  // });
-
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
   // userModel.model.sequelize.sync().then(function () {
@@ -49,8 +37,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //         user_id: "09123456789",
   //         user_name: "msi",
   //         password: encoded,
-  //         role: "001",
-  //         branch: "001",
+  //         role: "001"
   //       });
   //     }
   //   });
