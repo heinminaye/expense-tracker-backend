@@ -3,7 +3,6 @@ export interface IUser {
   user_name: string;
   password: string;
   role: number;
-  branch: string;
   remark: string;
   staff_id: string;
   is_deleted: boolean;
