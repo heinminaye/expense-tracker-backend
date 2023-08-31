@@ -54,7 +54,6 @@ export default class InventoryService {
               customer_name: item.customer_name,
               nrc: item.nrc,
               address: item.address,
-              receiving_branch: item.receiving_branch,
               date_time: item.date_time,
               user_name: item.user_name,
             };
@@ -103,20 +102,6 @@ export default class InventoryService {
         const now = new Date();
         const item_cash_id = uuidv4();
         const date_now = dateFormat(now, "isoDateTime");
-        var branchCheck: any;
-        var query = `SELECT * FROM branches RIGHT JOIN users ON branches.branch_id = users.branch WHERE users.user_id = '${adminuserCheck.user_id}'`;
-        await sequelize.query(query).then((data: any) => {
-          if (data[0].length > 0) {
-            branchCheck = data[0][0].branch_name;
-          } else {
-            return { returncode: "300", message: "Branch Not Found" };
-          }
-        });
-        if (!branchCheck) {
-          const returncode = "300";
-          const message = "Branch Not Found";
-          return { returncode, message };
-        }
         const getRandomId = (min = 0, max = 500000) => {
           min = Math.ceil(min);
           max = Math.floor(max);
@@ -132,8 +117,7 @@ export default class InventoryService {
           ...IInventory,
           invoice: invoice,
           item_cash_id: item_cash_id,
-          date_time: date_now,
-          receiving_branch: branchCheck,
+          date_time: date_now
         };
 
         var InventoryRecord: any;
@@ -151,7 +135,6 @@ export default class InventoryService {
           nrc: InventoryRecord.nrc,
           invoice: invoice,
           address: InventoryRecord.address,
-          receiving_branch: branchCheck,
           date_time: date_now,
           user_name: adminuserCheck.user_name,
         };
@@ -263,7 +246,6 @@ export default class InventoryService {
                 nrc: updateInventory[0].nrc,
                 address: updateInventory[0].address,
                 customer_name: updateInventory[0].customer_name,
-                receiving_branch: updateInventory[0].receiving_branch,
                 date_time: updateInventory[0].date_time,
                 user_name: inventoryCheck[0].user_name,
               };

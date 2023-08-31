@@ -29,10 +29,6 @@ const inventoryModel = (sequelize: any, Sequelize: any) => {
       allowNull: false,
       type: Sequelize.STRING,
     },
-    receiving_branch: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
     nrc: {
       allowNull: true,
       default: null,

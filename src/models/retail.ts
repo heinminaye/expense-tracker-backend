@@ -25,10 +25,6 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       allowNull: false,
       type: Sequelize.STRING,
     },
-    receiving_branch: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
     invoice: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -44,6 +40,10 @@ const retailModel = (sequelize: any, Sequelize: any) => {
     phone: {
       type: Sequelize.STRING,
       default: null,
+    },
+    price_rate:{
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     date_time: {
       type: Sequelize.STRING,

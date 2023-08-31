@@ -63,7 +63,6 @@ export default class AuthService {
         "user_id": userRecord.user_id,
         "user_name": userRecord.user_name,
         "role": userRecord.role,
-        "branch": userRecord.branch,
         "remark": userRecord.remark,
       };
 
