@@ -26,7 +26,7 @@ var addRetailSchema = Joi.object().keys({
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
   remark: Joi.allow(""),
-  price_rate: Joi.string().required()
+  price_rate: Joi.required(),
 });
 
 var EditRetailSchema = Joi.object().keys({
@@ -40,7 +40,7 @@ var EditRetailSchema = Joi.object().keys({
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
   remark: Joi.allow(""),
-  price_rate: Joi.string().required(),
+  price_rate: Joi.required(),
 });
 
 var deleteRetailSchema = Joi.object().keys({

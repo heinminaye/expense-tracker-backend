@@ -21,7 +21,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/retail"),
   };
 
-  // sequelize.sync({ alter: true });
+  sequelize.sync({ alter: true });
 
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
