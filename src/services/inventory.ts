@@ -56,6 +56,8 @@ export default class InventoryService {
               address: item.address,
               date_time: item.date_time,
               user_name: item.user_name,
+              price_rate: item.price_rate,
+              remark: item.remark,
             };
             templist.push(tempitem);
           });
@@ -117,7 +119,7 @@ export default class InventoryService {
           ...IInventory,
           invoice: invoice,
           item_cash_id: item_cash_id,
-          date_time: date_now
+          date_time: date_now,
         };
 
         var InventoryRecord: any;
@@ -137,6 +139,8 @@ export default class InventoryService {
           address: InventoryRecord.address,
           date_time: date_now,
           user_name: adminuserCheck.user_name,
+          price_rate: IInventory.price_rate,
+          remark: IInventory.remark,
         };
         io.sockets.emit("getSocketInventory", emit);
         return { returncode: "200", message: "Success", data: emit };
@@ -248,6 +252,8 @@ export default class InventoryService {
                 customer_name: updateInventory[0].customer_name,
                 date_time: updateInventory[0].date_time,
                 user_name: inventoryCheck[0].user_name,
+                price_rate: updateInventory[0].price_rate,
+                remark: updateInventory[0].remark,
               };
 
               data = emit;

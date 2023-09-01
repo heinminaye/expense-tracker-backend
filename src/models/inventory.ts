@@ -34,6 +34,10 @@ const inventoryModel = (sequelize: any, Sequelize: any) => {
       default: null,
       type: Sequelize.STRING,
     },
+    price_rate:{
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     address: {
       allowNull: true,
       default: null,

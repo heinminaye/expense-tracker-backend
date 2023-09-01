@@ -11,5 +11,6 @@ export interface IInventory {
   nrc: string;
   address: string;
   type: number;
+  price_rate: string;
   delete_cash_ids: [];
 }
