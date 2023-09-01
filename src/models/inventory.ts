@@ -35,7 +35,7 @@ const inventoryModel = (sequelize: any, Sequelize: any) => {
       type: Sequelize.STRING,
     },
     price_rate:{
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     address: {

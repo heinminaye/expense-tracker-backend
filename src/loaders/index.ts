@@ -32,7 +32,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //         user_id: "09123456789",
   //         user_name: "msi",
   //         password: encoded,
-  //         role: "001"
+  //         role: "001",
   //       });
   //     }
   //   });

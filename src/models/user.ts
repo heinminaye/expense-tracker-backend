@@ -25,9 +25,6 @@ const userModel = (sequelize: any, Sequelize: any) => {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
-    remark:{
-      type: Sequelize.STRING,
-    },
     sessionexpired: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,

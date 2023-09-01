@@ -42,7 +42,7 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       default: null,
     },
     price_rate:{
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     date_time: {

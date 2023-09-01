@@ -23,7 +23,7 @@ var AddInventorySchema = Joi.object().keys({
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
   remark: Joi.allow(""),
-  price_rate: Joi.string().required(),
+  price_rate: Joi.number().required(),
 });
 
 var EditInventorySchema = Joi.object().keys({
@@ -36,7 +36,7 @@ var EditInventorySchema = Joi.object().keys({
   nrc: Joi.allow(""),
   address: Joi.string().allow(""),
   remark: Joi.allow(""),
-  price_rate: Joi.string().required(),
+  price_rate: Joi.number().required(),
 });
 
 var DeleteInventorySchema = Joi.object().keys({
