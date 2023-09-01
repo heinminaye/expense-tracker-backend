@@ -52,6 +52,8 @@ export default class RetailService {
               address: item.address,
               date_time: item.date_time,
               user_name: item.user_name,
+              price_rate: item.price_rate,
+              remark: item.remark,
             };
             templist.push(tempitem);
           });
@@ -110,7 +112,7 @@ export default class RetailService {
           ...IRetail,
           invoice: invoice,
           item_cash_id: item_cash_id,
-          date_time: date_now
+          date_time: date_now,
         };
 
         var RetailRecord: any;
@@ -130,6 +132,8 @@ export default class RetailService {
           address: RetailRecord.address,
           date_time: date_now,
           user_name: adminuserCheck.user_name,
+          price_rate: IRetail.price_rate,
+          remark: IRetail.remark,
         };
         io.sockets.emit("getSocketRetail", emit);
         result = { returncode: "200", message: "Success", data: emit };
@@ -211,6 +215,8 @@ export default class RetailService {
                 phone: updateRetail[0].phone,
                 date_time: updateRetail[0].date_time,
                 user_name: retailCheck[0].user_name,
+                price_rate: updateRetail[0].price_rate,
+                remark: updateRetail[0].remark,
               };
               io.sockets.emit("editSocketRetail", emit);
               result = { returncode, message, data: emit };

@@ -13,5 +13,6 @@ export interface IRetail {
     phone: string;
     address: string;
     type: string;
+    price_rate: string;
     delete_cash_ids: []
 }
