@@ -1,4 +1,4 @@
-import { IUser } from "./../interfaces/user";
+import { IUser, UpdatePassword } from "./../interfaces/user";
 import { Service, Inject } from "typedi";
 import argon2 from "argon2";
 import { randomBytes } from "crypto";
@@ -102,7 +102,7 @@ export default class UserService {
       const userData = {
         ...IUser,
         user_id: IUser.staff_id,
-        password: encoded
+        password: encoded,
       };
       var userCheck: any;
       await this.userModel.services
@@ -374,5 +374,53 @@ export default class UserService {
       console.log(e);
       return { returncode: "300", message: "Fail" };
     }
+  }
+
+  public async UpdatePassword(
+    UpdatePassword: UpdatePassword
+  ): Promise<{ returncode: string; message: string }> {
+    var userRecord: any;
+    var result: any;
+    await this.userModel.services
+      .findAll({
+        where: { user_id: UpdatePassword.user_id, is_deleted: false },
+      })
+      .then((data: any) => {
+        if (data.length > 0) {
+          userRecord = data[0];
+        }
+      });
+
+    if (!userRecord) {
+      return { returncode: "300", message: "User Not Found" };
+    }
+    var decoded = Buffer.from(userRecord.password, "base64").toString("utf8");
+    var validPassword: boolean = false;
+    if (decoded == UpdatePassword.current_password) {
+      validPassword = true;
+    }
+    if (validPassword) {
+      var new_encoded = Buffer.from(
+        UpdatePassword.new_password,
+        "utf8"
+      ).toString("base64");
+      await this.userModel.services
+        .update(
+          { password: new_encoded },
+          {
+            where: { user_id: UpdatePassword.user_id, is_deleted: false },
+          }
+        )
+        .then((data: any) => {
+          if (data == 1) {
+            result = { returncode: "200", message: "Success" };
+          } else {
+            result = { returncode: "300", message: "Fail" };
+          }
+        });
+    } else {
+      return { returncode: "300", message: "Invalid Current Password" };
+    }
+    return result;
   }
 }

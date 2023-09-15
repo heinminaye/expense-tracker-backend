@@ -21,8 +21,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/retail"),
   };
 
-  sequelize.sync({ alter: true });
-
+  
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
   // userModel.model.sequelize.sync().then(function () {
@@ -37,6 +36,8 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //     }
   //   });
   // });
+
+  // sequelize.sync({ alter: true });
 
   userModel.model.services.hasMany(inventoryModel.model.services, {
     foreignKey: {

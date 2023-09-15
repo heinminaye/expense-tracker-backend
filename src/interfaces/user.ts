@@ -13,3 +13,9 @@ export interface UserLogin {
   uuid: string;
   fcmtoken: string;
 }
+
+export interface UpdatePassword{
+  user_id: string;
+  current_password: string;
+  new_password: string;
+}
