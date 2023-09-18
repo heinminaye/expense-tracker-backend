@@ -9,6 +9,7 @@ export interface IInventory {
   user_id: string;
   invoice: string;
   nrc: string;
+  phone: string;
   address: string;
   type: number;
   price_rate: string;

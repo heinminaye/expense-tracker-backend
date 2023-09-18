@@ -9,7 +9,7 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       allowNull: false,
     },
     item_amount: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       allowNull: false,
     },
     item_code: {
@@ -42,7 +42,7 @@ const retailModel = (sequelize: any, Sequelize: any) => {
       default: null,
     },
     price_rate:{
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       allowNull: false,
     },
     date_time: {

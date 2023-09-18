@@ -1,11 +1,11 @@
 import config from '../config';
 import { Sequelize } from 'sequelize';
-import tedious from 'tedious';
+import * as pg from 'pg'
 //create connection
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   host: config.HOST,
   dialect: "postgres",
-  dialectModule: tedious,
+  dialectModule: pg,
   pool: {
     max: config.pool.max,
     min: config.pool.min,

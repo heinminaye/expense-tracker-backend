@@ -9,7 +9,7 @@ const inventoryModel = (sequelize: any, Sequelize: any) => {
       allowNull: false,
     },
     item_amount: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       allowNull: false,
     },
     item_code: {
@@ -30,18 +30,21 @@ const inventoryModel = (sequelize: any, Sequelize: any) => {
       type: Sequelize.STRING,
     },
     nrc: {
-      allowNull: true,
-      default: null,
       type: Sequelize.STRING,
+      default: null,
     },
     price_rate:{
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       allowNull: false,
     },
     address: {
       allowNull: true,
       default: null,
       type: Sequelize.STRING,
+    },
+    phone: {
+      type: Sequelize.STRING,
+      default: null,
     },
     date_time: {
       type: Sequelize.STRING,
