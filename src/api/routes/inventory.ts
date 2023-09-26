@@ -38,7 +38,7 @@ var EditInventorySchema = Joi.object().keys({
   address: Joi.string().allow(""),
   phone: Joi.string().allow(""),
   remark: Joi.allow(""),
-  price_rate: Joi.number().required(),
+  price_rate: Joi.allow(""),
 });
 
 var DeleteInventorySchema = Joi.object().keys({
