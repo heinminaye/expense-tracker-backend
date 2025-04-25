@@ -83,5 +83,4 @@ export default (app: Router) => {
       }
     }
   );
-
 };
