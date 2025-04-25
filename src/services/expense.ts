@@ -1,4 +1,4 @@
-import { IExpense, IBreakdownItem } from "../interfaces/expense";
+import { IExpense, IBreakdownItem, IDeleteExpenseRequest } from "../interfaces/expense";
 import { IUser } from "../interfaces/user";
 import { Sequelize, Op, Transaction } from "sequelize";
 import sequelize from "../sequelize";
@@ -20,13 +20,13 @@ export default class ExpenseService {
    * Get expenses with their breakdown items
    */
   public async getExpensesWithBreakdown(
-    expenseData: IExpense,
-    page?: any
+    expenseData: IExpense
   ): Promise<{
     success: boolean;
     message: string;
     totalPages?: number;
     currentPage?: number;
+    totalRows?: number;
     totalAmount?: number;
     data?: IExpense[];
   }> {
@@ -76,7 +76,7 @@ export default class ExpenseService {
       const totalAmount = parseFloat(totalAmountResult?.total) || 0;
 
       // Pagination
-      const offset = page ? (page - 1) * this.itemsPerPage : 0;
+      const offset = expenseData.page ? (expenseData.page - 1) * this.itemsPerPage : 0;
       const limit = this.itemsPerPage;
 
       // Get expenses
@@ -94,7 +94,8 @@ export default class ExpenseService {
           success: true, 
           message: "No expenses found",
           totalPages: 0,
-          currentPage: page || 1,
+          currentPage: expenseData.page || 1,
+          totalRows: 0,
           totalAmount: 0,
           data: []
         };
@@ -139,7 +140,8 @@ export default class ExpenseService {
         success: true,
         message: "Expenses retrieved successfully",
         totalPages: Math.ceil(totalRows / this.itemsPerPage),
-        currentPage: page || 1,
+        currentPage: expenseData.page || 1,
+        totalRows: totalRows,
         totalAmount,
         data: formattedExpenses
       };
@@ -229,6 +231,51 @@ export default class ExpenseService {
       if (transaction) await transaction.rollback();
       console.error("Error in addExpenseWithBreakdown:", error);
       return { success: false, message: "Failed to add expense with breakdown items" };
+    }
+  }
+
+  public async softDeleteExpenses(
+    expenseData: IDeleteExpenseRequest
+  ): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    let transaction: Transaction | null = null;
+    try {
+      transaction = await sequelize.transaction();
+  
+      // Validate user
+      const user = await this.userModel.services.findOne({
+        where: { user_id:expenseData.user_id , is_deleted: false },
+        transaction
+      });
+  
+      if (!user) {
+        await transaction.rollback();
+        return { success: false, message: "User not found" };
+      }
+  
+      // Soft delete expenses
+      await this.expenseModel.services.update(
+        { is_deleted: true },
+        {
+          where: {
+            id: { [Op.in]: expenseData.expense_ids },
+            is_deleted: false
+          },
+          transaction
+        }
+      );
+  
+      await transaction.commit();
+      return {
+        success: true,
+        message: "Expenses deleted successfully"
+      };
+    } catch (error) {
+      if (transaction) await transaction.rollback();
+      console.error("Error in softDeleteExpenses:", error);
+      return { success: false, message: "Failed to delete expenses" };
     }
   }
 

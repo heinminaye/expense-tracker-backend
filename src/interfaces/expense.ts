@@ -16,9 +16,14 @@ export interface IExpense {
     note?: string;
     date_type?: string;
     search_value?: string;
+    page?: number;
     delete_ids?: string[];
     is_deleted?: boolean;
     breakdownItems?: IBreakdownItem[];
     start_date?: string;
     end_date?: string;
 }
+export interface IDeleteExpenseRequest {
+    user_id: string;
+    expense_ids: string[];
+  }
