@@ -43,7 +43,6 @@ export default class ExpenseService {
         return { success: false, message: "User not found" };
       }
 
-      // Build where clause
       const where: any = { 
         is_deleted: false 
       };
