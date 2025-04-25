@@ -9,7 +9,7 @@ export default ({ app }: { app: express.Application }) => {
    * @TODO Explain why they are here
    */
   app.get("/", function (req, res) {
-    res.sendFile("../views/index.html");
+    res.json({"message" : "Server is running!"})
   });
 
   // Enable Cross Origin Resource Sharing to all origins by default

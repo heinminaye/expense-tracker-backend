@@ -24,8 +24,8 @@ export default {
   //Postgrpsql Local DB config
   HOST: "localhost",
   USER: "postgres",
-  PASSWORD: "santoe",
-  DB: "sales",
+  PASSWORD: "123456789",
+  DB: "expense",
   dialect: "postgres",
   pool: {
     max: 5,

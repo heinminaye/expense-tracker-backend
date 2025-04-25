@@ -5,7 +5,7 @@ import argon2 from "argon2";
 import * as bcrypt from "bcrypt";
 import { Router, Request, Response, NextFunction } from "express";
 import jwt_decode from "jwt-decode";
-import { IUser, UpdatePassword, UserLogin } from "../interfaces/user";
+import { UpdatePassword, UserLogin } from "../interfaces/user";
 import { v4 as uuidv4 } from "uuid";
 
 declare module "jsonwebtoken" {
@@ -18,7 +18,7 @@ declare module "jsonwebtoken" {
 @Service()
 export default class AuthService {
   constructor(
-    @Inject("userModel") private userModel: any // @Inject('noti_deviceModel') private noti_deviceModel: any,
+    @Inject("userModel") private userModel: any
   ) {}
 
   public async SignIn(UserLogin: UserLogin) {
@@ -131,7 +131,7 @@ export default class AuthService {
       }
       return { returncode: "200", message: "Success", data, token };
     } else {
-      return { returncode: "300", message: "Invalid Phone Number or Password" };
+      return { returncode: "300", message: "Invalid Email or Password" };
     }
   }
 

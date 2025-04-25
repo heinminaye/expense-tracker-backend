@@ -10,16 +10,18 @@ export default async ({ expressApp }: { expressApp: any }) => {
     name: "userModel",
     model: require("../models/user"),
   };
-
-  const inventoryModel = {
-    name: "inventoryModel",
-    model: require("../models/inventory"),
+  const expenseModel = {
+    name: "expenseModel",
+    model: require("../models/expense"),
   };
 
-  const retailModel = {
-    name: "retailModel",
-    model: require("../models/retail"),
+  const breakdownItemModel = {
+    name: "breakdownItemModel",
+    model: require("../models/breakdownitem"),
   };
+
+
+  
 
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
@@ -27,8 +29,8 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //   userModel.model.services.findAll({}).then((data: any) => {
   //     if (data.length == 0) {
   //       userModel.model.services.create({
-  //         user_id: "09123456789",
-  //         user_name: "msi",
+  //         user_id: "admin@gmail.com",
+  //         user_name: "admin",
   //         password: encoded,
   //         role: "001",
   //       });
@@ -36,25 +38,21 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //   });
   // });
 
+  expenseModel.model.services.hasMany(breakdownItemModel.model.services, {
+    foreignKey: 'expense_id',
+    as: 'breakdownItems',
+  });
+  
+  breakdownItemModel.model.services.belongsTo(breakdownItemModel.model.services, {
+    foreignKey: 'expense_id',
+    as: 'expense',
+  });
+
   // sequelize.sync({ alter: true });
-
-  userModel.model.services.hasMany(inventoryModel.model.services, {
-    foreignKey: {
-      name: "user_id",
-      unique: false,
-    },
-  });
-
-  userModel.model.services.hasMany(retailModel.model.services, {
-    foreignKey: {
-      name: "user_id",
-      unique: false,
-    },
-  });
 
   // Set Containers for Dependency Injection
   await dependencyInjectorLoader({
-    models: [userModel, inventoryModel, retailModel],
+    models: [userModel, expenseModel, breakdownItemModel],
   });
 
   await expressLoader({ app: expressApp });

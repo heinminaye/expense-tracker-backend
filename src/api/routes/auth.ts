@@ -2,29 +2,21 @@ import { Router, Request, Response, NextFunction } from "express";
 import { Container } from "typedi";
 import AuthService from "../../services/auth";
 import middlewares from "../middlewares";
-import { IUser, UpdatePassword, UserLogin } from "../../interfaces/user";
-import { celebrate, Joi } from "celebrate";
+import { UpdatePassword, UserLogin } from "../../interfaces/user";
+import { Joi } from "celebrate";
 const route = Router();
 
 var SignInSchema = Joi.object().keys({
   user_id: Joi.string().required(),
-  password: Joi.string().required(),
-  uuid: Joi.string(),
-  fcmtoken: Joi.string(),
-});
-
-var SignInSchema = Joi.object().keys({
-  user_id: Joi.string().required(),
-  password: Joi.string().required(),
-  uuid: Joi.string(),
-  fcmtoken: Joi.string(),
+  password: Joi.string().required()
 });
 
 export default (app: Router) => {
-  app.use(route);
+  app.use('/auth',route);
 
   route.post(
     "/signin",
+    middlewares.validation(SignInSchema),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const authServiceInstance = Container.get(AuthService);

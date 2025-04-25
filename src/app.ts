@@ -7,7 +7,7 @@ require("./loaders").default({ expressApp: app });
 
 const port = process.env.PORT || 3030;
 var server = app
-  .listen(3030, "0.0.0.0", () => {
+  .listen(3030, () => {
     console.log(`
     ------------------------------------------------
     ################################################
@@ -31,40 +31,4 @@ process.on("unhandledRejection", (reason, promise) => {
   console.log("----- Reason -----");
   console.log(reason);
 });
-// setInterval(() => {
-//   console.log('app still running')
-// }, 1000)
 
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-  },
-});
-
-io.on("connection", (socket: any) => {
-  console.log(`
-    
-    
-
-    user join:   ${socket.id}
-
-
-  `);
-
-  // socket.on('addInventory',function(data:any){
-  //   io.emit('getSocketInventory',data);
-  //   console.log(data)
-  // })
-  socket.on("disconnect", function () {
-    console.log(`
-    
-    
-
-      user left:   ${socket.id}
-
-    
-    `);
-  });
-});
-
-export default io;
