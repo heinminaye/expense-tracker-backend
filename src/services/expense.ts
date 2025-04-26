@@ -278,5 +278,188 @@ export default class ExpenseService {
       return { success: false, message: "Failed to delete expenses" };
     }
   }
+/**
+ * Edit expense with breakdown items (only updates existing items and adds new ones)
+ */
+public async editExpenseWithBreakdown(
+  expenseData: IExpense
+): Promise<{
+    success: boolean;
+    message: string;
+    data?: IExpense;
+  }> {
+  let transaction: Transaction | null = null;
+  try {
+    transaction = await sequelize.transaction();
 
+    // Validate user exists
+    const user = await this.userModel.services.findOne({
+      where: { user_id: expenseData.user_id, is_deleted: false },
+      transaction
+    });
+    if (!user) {
+      await transaction.rollback();
+      return { success: false, message: "User not found" };
+    }
+
+    // Get existing expense
+    const existingExpense = await this.expenseModel.services.findOne({
+      where: { id: expenseData.id, is_deleted: false },
+      transaction
+    });
+    if (!existingExpense) {
+      await transaction.rollback();
+      return { success: false, message: "Expense not found" };
+    }
+
+    // Update expense
+    await this.expenseModel.services.update(
+      {
+        category: expenseData.category,
+        expense: expenseData.expense,
+        date: expenseData.date,
+        note: expenseData.note
+      },
+      {
+        where: { id: expenseData.id },
+        transaction
+      }
+    );
+
+    // Handle breakdown items
+    let breakdownItems: IBreakdownItem[] = [];
+    if (expenseData.breakdownItems && expenseData.breakdownItems.length > 0) {
+      // Process each incoming item
+      for (const item of expenseData.breakdownItems) {
+        if (item.id) {
+          // Update existing item
+          await this.breakdownModel.services.update(
+            {
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity
+            },
+            {
+              where: { 
+                id: item.id,
+                expense_id: expenseData.id 
+              },
+              transaction
+            }
+          );
+        } else {
+          // Create new item
+          const newItem = await this.breakdownModel.services.create({
+            id: uuidv4(),
+            expense_id: expenseData.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          }, { transaction });
+          breakdownItems.push({
+            id: newItem.id,
+            name: newItem.name,
+            price: newItem.price,
+            quantity: newItem.quantity
+          });
+        }
+      }
+
+      // Get all breakdown items for response
+      const updatedBreakdownItems = await this.breakdownModel.services.findAll({
+        where: { expense_id: expenseData.id },
+        transaction
+      });
+      breakdownItems = updatedBreakdownItems.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price, 
+        quantity: item.quantity
+      }));
+    }
+
+    await transaction.commit();
+    return {
+      success: true,
+      message: "Expense with breakdown items updated successfully",
+      data: {
+        id: expenseData.id,
+        category: expenseData.category,
+        expense: expenseData.expense,
+        date: expenseData.date,
+        note: expenseData.note,
+        is_deleted: false,
+        breakdownItems
+      }
+    };
+  } catch (error) {
+    if (transaction) await transaction.rollback();
+    console.error("Error in editExpenseWithBreakdown:", error);
+    return { 
+      success: false, 
+      message: "Failed to update expense with breakdown items" 
+    };
+  }
+}
+
+/**
+ * Delete single breakdown item (hard delete)
+ */
+public async deleteBreakdownItem(
+  breakdownItemId: string,
+  userId: string
+): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+  let transaction: Transaction | null = null;
+  try {
+    transaction = await sequelize.transaction();
+
+    // Validate user exists
+    const user = await this.userModel.services.findOne({
+      where: { user_id: userId, is_deleted: false },
+      transaction
+    });
+    if (!user) {
+      await transaction.rollback();
+      return { success: false, message: "User not found" };
+    }
+
+    // Verify the breakdown item exists and belongs to user's expense
+    const breakdownItem = await this.breakdownModel.services.findOne({
+      where: { id: breakdownItemId },
+      include: [{
+        model: this.expenseModel.services,
+        where: { user_id: userId },
+        required: true
+      }],
+      transaction
+    });
+
+    if (!breakdownItem) {
+      await transaction.rollback();
+      return { success: false, message: "Breakdown item not found" };
+    }
+
+    // Hard delete the breakdown item
+    await this.breakdownModel.services.destroy({
+      where: { id: breakdownItemId },
+      transaction
+    });
+
+    await transaction.commit();
+    return {
+      success: true,
+      message: "Breakdown item deleted successfully"
+    };
+  } catch (error) {
+    if (transaction) await transaction.rollback();
+    console.error("Error in deleteBreakdownItem:", error);
+    return { 
+      success: false, 
+      message: "Failed to delete breakdown item" 
+    };
+  }
+}
 }

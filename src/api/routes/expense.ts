@@ -16,6 +16,7 @@ const ExpenseSchema = Joi.object().keys({
   note: Joi.string().allow("").optional(),
   breakdownItems: Joi.array().items(
     Joi.object().keys({
+      id: Joi.string().optional(), // For edit operation
       name: Joi.string().required(),
       price: Joi.number().required(),
       quantity: Joi.number().required()
@@ -37,9 +38,15 @@ const ExpenseDeleteSchema = Joi.object().keys({
   expense_ids: Joi.array().items(Joi.string().uuid()).min(1).required()
 });
 
+const BreakdownItemDeleteSchema = Joi.object().keys({
+  user_id: Joi.string().required(),
+  breakdown_item_id: Joi.string().uuid().required()
+});
+
 export default (app: Router) => {
   app.use('/expenses', route);
 
+  // Get expenses with breakdown
   route.post(
     "/",
     middlewares.isAuth,
@@ -47,7 +54,7 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message, totalPages, currentPage,totalRows, totalAmount, data } =
+        const { success, message, totalPages, currentPage, totalRows, totalAmount, data } =
           await expenseServiceInstance.getExpensesWithBreakdown(req.body as IExpense);
 
         return res.json({ 
@@ -66,6 +73,7 @@ export default (app: Router) => {
     }
   );
 
+  // Add expense with breakdown
   route.post(
     "/add",
     middlewares.isAuth,
@@ -88,6 +96,33 @@ export default (app: Router) => {
     }
   );
 
+  // Edit expense with breakdown
+  route.post(
+    "/edit",
+    middlewares.isAuth,
+    middlewares.validation(ExpenseSchema),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const expenseServiceInstance = Container.get(ExpenseService);
+        const { success, message, data } =
+          await expenseServiceInstance.editExpenseWithBreakdown(req.body as IExpense);
+
+        return res.json({ 
+          returncode: success ? "200" : "300", 
+          message, 
+          data 
+        }).status(success ? 200 : 400);
+      } catch (e) {
+        console.log(e);
+        return res.json({ 
+          returncode: "300", 
+          message: "Failed to edit expense" 
+        }).status(500);
+      }
+    }
+  );
+
+  // Soft delete expenses
   route.post(
     "/delete",
     middlewares.isAuth,
@@ -95,9 +130,9 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-  
-        const { success, message } = await expenseServiceInstance.softDeleteExpenses(req.body as IDeleteExpenseRequest);
-  
+        const { success, message } = 
+          await expenseServiceInstance.softDeleteExpenses(req.body as IDeleteExpenseRequest);
+
         return res.status(success ? 200 : 400).json({
           returncode: success ? "200" : "300",
           message
@@ -107,6 +142,34 @@ export default (app: Router) => {
         return res.status(500).json({
           returncode: "300",
           message: "Failed to delete expenses"
+        });
+      }
+    }
+  );
+
+  // Delete single breakdown item
+  route.post(
+    "/breakdown/delete",
+    middlewares.isAuth,
+    middlewares.validation(BreakdownItemDeleteSchema),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const expenseServiceInstance = Container.get(ExpenseService);
+        const { success, message } = 
+          await expenseServiceInstance.deleteBreakdownItem(
+            req.body.breakdown_item_id, 
+            req.body.user_id
+          );
+
+        return res.status(success ? 200 : 400).json({
+          returncode: success ? "200" : "300",
+          message
+        });
+      } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+          returncode: "300",
+          message: "Failed to delete breakdown item"
         });
       }
     }
