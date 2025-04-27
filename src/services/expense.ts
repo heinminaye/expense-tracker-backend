@@ -429,11 +429,6 @@ public async deleteBreakdownItem(
     // Verify the breakdown item exists and belongs to user's expense
     const breakdownItem = await this.breakdownModel.services.findOne({
       where: { id: breakdownItemId },
-      include: [{
-        model: this.expenseModel.services,
-        where: { user_id: userId },
-        required: true
-      }],
       transaction
     });
 

@@ -20,9 +20,6 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/breakdownitem"),
   };
 
-
-  
-
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
   // userModel.model.sequelize.sync().then(function () {

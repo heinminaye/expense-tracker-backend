@@ -24,6 +24,24 @@ const ExpenseSchema = Joi.object().keys({
   ).optional()
 });
 
+const EditExpenseSchema = Joi.object().keys({
+  id: Joi.string().optional(),
+  user_id: Joi.string().required(),
+  category: Joi.string().required(),
+  expense: Joi.number().required(),
+  date: Joi.string().optional(),
+  note: Joi.string().allow("").optional(),
+  is_deleted: Joi.boolean().optional(),
+  breakdownItems: Joi.array().items(
+    Joi.object().keys({
+      id: Joi.string().optional(), // For edit operation
+      name: Joi.string().required(),
+      price: Joi.number().required(),
+      quantity: Joi.number().required()
+    })
+  ).optional()
+});
+
 const ExpenseQuerySchema = Joi.object().keys({
   user_id: Joi.string().required(),
   search_value: Joi.string().optional().allow(''),
@@ -100,7 +118,7 @@ export default (app: Router) => {
   route.post(
     "/edit",
     middlewares.isAuth,
-    middlewares.validation(ExpenseSchema),
+    middlewares.validation(EditExpenseSchema),
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
