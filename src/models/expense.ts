@@ -8,9 +8,15 @@ const expenseModel = (sequelize: any, Sequelize: any) => {
       primaryKey: true,
       allowNull: false,
     },
-    category: {
+    category_id: { 
       type: Sequelize.STRING,
       allowNull: false,
+      references: {
+        model: 'categories',
+        key: 'id',
+      },
+      onDelete: 'RESTRICT',
+      onUpdate: 'CASCADE',
     },
     expense: {
       type: Sequelize.INTEGER,
@@ -27,7 +33,7 @@ const expenseModel = (sequelize: any, Sequelize: any) => {
     is_deleted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
-    },
+    }
   });
 
   return expenses;

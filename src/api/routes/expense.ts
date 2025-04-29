@@ -10,14 +10,15 @@ const route = Router();
 // Joi Schemas for validation
 const ExpenseSchema = Joi.object().keys({
   user_id: Joi.string().required(),
-  category: Joi.string().required(),
+  category_id: Joi.string().required(),  // Changed from category to category_id
   expense: Joi.number().required(),
   date: Joi.string().optional(),
   note: Joi.string().allow("").optional(),
   breakdownItems: Joi.array().items(
     Joi.object().keys({
-      id: Joi.string().optional(), // For edit operation
-      name: Joi.string().required(),
+      id: Joi.string().optional(),
+      name: Joi.string().optional(),  // Made optional since category_id can be used
+      category_id: Joi.string().optional(),  // Added category_id
       price: Joi.number().required(),
       quantity: Joi.number().required()
     })
@@ -25,17 +26,18 @@ const ExpenseSchema = Joi.object().keys({
 });
 
 const EditExpenseSchema = Joi.object().keys({
-  id: Joi.string().optional(),
+  id: Joi.string().required(),  // Made required for edit
   user_id: Joi.string().required(),
-  category: Joi.string().required(),
+  category_id: Joi.string().required(),  // Changed from category to category_id
   expense: Joi.number().required(),
   date: Joi.string().optional(),
   note: Joi.string().allow("").optional(),
   is_deleted: Joi.boolean().optional(),
   breakdownItems: Joi.array().items(
     Joi.object().keys({
-      id: Joi.string().optional(), // For edit operation
-      name: Joi.string().required(),
+      id: Joi.string().optional(),
+      name: Joi.string().optional(),  // Made optional
+      category_id: Joi.string().optional(),  // Added category_id
       price: Joi.number().required(),
       quantity: Joi.number().required()
     })
@@ -48,7 +50,8 @@ const ExpenseQuerySchema = Joi.object().keys({
   date_type: Joi.string().optional(),
   start_date: Joi.string().optional(),
   end_date: Joi.string().optional(),
-  page: Joi.number().optional()
+  page: Joi.number().optional(),
+  category_id: Joi.string().optional()  // Added for filtering by category
 });
 
 const ExpenseDeleteSchema = Joi.object().keys({
@@ -72,21 +75,23 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message, totalPages, currentPage, totalRows, totalAmount, data } =
-          await expenseServiceInstance.getExpensesWithBreakdown(req.body as IExpense);
+        const response = await expenseServiceInstance.getExpensesWithBreakdown(req.body as IExpense);
 
-        return res.json({ 
-          returncode: success ? "200" : "300", 
-          message, 
-          totalPages, 
-          currentPage, 
-          totalRows,
-          totalAmount, 
-          data 
-        }).status(200);
+        return res.status(response.success ? 200 : 400).json({ 
+          returncode: response.success ? "200" : "300", 
+          message: response.message, 
+          totalPages: response.totalPages, 
+          currentPage: response.currentPage, 
+          totalRows: response.totalRows,
+          totalAmount: response.totalAmount, 
+          data: response.data 
+        });
       } catch (e) {
         console.log(e);
-        return res.json({ returncode: "300", message: "Failed to get expenses" }).status(500);
+        return res.status(500).json({ 
+          returncode: "300", 
+          message: "Failed to get expenses" 
+        });
       }
     }
   );
@@ -99,17 +104,19 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message, data } =
-          await expenseServiceInstance.addExpenseWithBreakdown(req.body as IExpense);
+        const response = await expenseServiceInstance.addExpenseWithBreakdown(req.body as IExpense);
 
-        return res.json({ 
-          returncode: success ? "200" : "300", 
-          message, 
-          data 
-        }).status(success ? 200 : 400);
+        return res.status(response.success ? 200 : 400).json({ 
+          returncode: response.success ? "200" : "300", 
+          message: response.message, 
+          data: response.data 
+        });
       } catch (e) {
         console.log(e);
-        return res.json({ returncode: "300", message: "Failed to add expense" }).status(500);
+        return res.status(500).json({ 
+          returncode: "300", 
+          message: "Failed to add expense" 
+        });
       }
     }
   );
@@ -122,20 +129,19 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message, data } =
-          await expenseServiceInstance.editExpenseWithBreakdown(req.body as IExpense);
+        const response = await expenseServiceInstance.editExpenseWithBreakdown(req.body as IExpense);
 
-        return res.json({ 
-          returncode: success ? "200" : "300", 
-          message, 
-          data 
-        }).status(success ? 200 : 400);
+        return res.status(response.success ? 200 : 400).json({ 
+          returncode: response.success ? "200" : "300", 
+          message: response.message, 
+          data: response.data 
+        });
       } catch (e) {
         console.log(e);
-        return res.json({ 
+        return res.status(500).json({ 
           returncode: "300", 
           message: "Failed to edit expense" 
-        }).status(500);
+        });
       }
     }
   );
@@ -148,12 +154,11 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message } = 
-          await expenseServiceInstance.softDeleteExpenses(req.body as IDeleteExpenseRequest);
+        const response = await expenseServiceInstance.softDeleteExpenses(req.body as IDeleteExpenseRequest);
 
-        return res.status(success ? 200 : 400).json({
-          returncode: success ? "200" : "300",
-          message
+        return res.status(response.success ? 200 : 400).json({
+          returncode: response.success ? "200" : "300",
+          message: response.message
         });
       } catch (e) {
         console.error(e);
@@ -173,15 +178,14 @@ export default (app: Router) => {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const expenseServiceInstance = Container.get(ExpenseService);
-        const { success, message } = 
-          await expenseServiceInstance.deleteBreakdownItem(
-            req.body.breakdown_item_id, 
-            req.body.user_id
-          );
+        const response = await expenseServiceInstance.deleteBreakdownItem(
+          req.body.breakdown_item_id, 
+          req.body.user_id
+        );
 
-        return res.status(success ? 200 : 400).json({
-          returncode: success ? "200" : "300",
-          message
+        return res.status(response.success ? 200 : 400).json({
+          returncode: response.success ? "200" : "300",
+          message: response.message
         });
       } catch (e) {
         console.error(e);

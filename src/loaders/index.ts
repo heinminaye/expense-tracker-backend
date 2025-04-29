@@ -20,6 +20,11 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/breakdownitem"),
   };
 
+  const categoryModel = {
+    name: "categoryModel",
+    model: require("../models/category"),
+  };
+
   // const encoded = Buffer.from("password", "utf8").toString("base64");
 
   // userModel.model.sequelize.sync().then(function () {
@@ -35,21 +40,52 @@ export default async ({ expressApp }: { expressApp: any }) => {
   //   });
   // });
 
+  userModel.model.services.hasMany(expenseModel.model.services, {
+    foreignKey: {
+      name: "user_id",
+      unique: false,
+    },
+  });
+  
   expenseModel.model.services.hasMany(breakdownItemModel.model.services, {
     foreignKey: 'expense_id',
     as: 'breakdownItems',
   });
   
-  breakdownItemModel.model.services.belongsTo(breakdownItemModel.model.services, {
+  breakdownItemModel.model.services.belongsTo(expenseModel.model.services, {
     foreignKey: 'expense_id',
     as: 'expense',
   });
+  
+  categoryModel.model.services.hasMany(categoryModel.model.services, {
+    foreignKey: 'parentId',
+    as: 'children',
+  });
+  
+  categoryModel.model.services.belongsTo(categoryModel.model.services, {
+    foreignKey: 'parentId',
+    as: 'parent',
+  });
 
+  expenseModel.model.services.belongsTo(categoryModel.model.services, {
+    foreignKey: 'category_id',
+    as: 'category'
+  });
+
+  categoryModel.model.services.hasMany(expenseModel.model.services, {
+    foreignKey: 'category_id',
+    as: 'expenses'
+  });
+
+  breakdownItemModel.model.services.belongsTo(categoryModel.model.services, {
+    foreignKey: 'category_id',
+    as: 'category',
+  });
   // sequelize.sync({ alter: true });
 
   // Set Containers for Dependency Injection
   await dependencyInjectorLoader({
-    models: [userModel, expenseModel, breakdownItemModel],
+    models: [userModel, expenseModel, breakdownItemModel,categoryModel],
   });
 
   await expressLoader({ app: expressApp });
