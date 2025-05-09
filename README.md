@@ -24,7 +24,7 @@ To run this project locally, you’ll need the following:
   
 ### Before starting the server, configure your database. Open the config/db.config.js
 
-```
+```js
 module.exports = {
   HOST: "localhost",
   USER: "postgres", // Change with your own postgres username
@@ -39,7 +39,11 @@ module.exports = {
   },
 };
 ```
+### ⚙️ When you first run the backend, the default admin user credentials are:
 
+
+- **Email:** admin@gmail.com
+- **Password:** password
 
 
 ### ⚙️ Getting Started
