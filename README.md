@@ -42,8 +42,8 @@ module.exports = {
 ### ⚙️ When you first run the backend, the default admin user credentials are:
 
 
-- **Email:** admin@gmail.com
-- **Password:** password
+- **Email**: admin@gmail.com
+- **Password**: password
 
 
 ### ⚙️ Getting Started
