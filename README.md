@@ -23,6 +23,8 @@ To run this project locally, you’ll need the following:
 - **npm** (comes with Node.js)
   
 ### Before starting the server, configure your database. Open the config/db.config.js
+
+```
 module.exports = {
   HOST: "localhost",
   USER: "postgres", // Change with your own postgres username
@@ -36,6 +38,8 @@ module.exports = {
     idle: 10000,
   },
 };
+```
+
 
 
 ### ⚙️ Getting Started
