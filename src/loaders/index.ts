@@ -25,20 +25,20 @@ export default async ({ expressApp }: { expressApp: any }) => {
     model: require("../models/category"),
   };
 
-  // const encoded = Buffer.from("password", "utf8").toString("base64");
+  const encoded = Buffer.from("password", "utf8").toString("base64");
 
-  // userModel.model.sequelize.sync().then(function () {
-  //   userModel.model.services.findAll({}).then((data: any) => {
-  //     if (data.length == 0) {
-  //       userModel.model.services.create({
-  //         user_id: "admin@gmail.com",
-  //         user_name: "admin",
-  //         password: encoded,
-  //         role: "001",
-  //       });
-  //     }
-  //   });
-  // });
+  userModel.model.sequelize.sync().then(function () {
+    userModel.model.services.findAll({}).then((data: any) => {
+      if (data.length == 0) {
+        userModel.model.services.create({
+          user_id: "admin@gmail.com",
+          user_name: "admin",
+          password: encoded,
+          role: "001",
+        });
+      }
+    });
+  });
 
   userModel.model.services.hasMany(expenseModel.model.services, {
     foreignKey: {
@@ -81,7 +81,7 @@ export default async ({ expressApp }: { expressApp: any }) => {
     foreignKey: 'category_id',
     as: 'category',
   });
-  // sequelize.sync({ alter: true });
+  sequelize.sync({ alter: true });
 
   // Set Containers for Dependency Injection
   await dependencyInjectorLoader({
